@@ -4,6 +4,7 @@ import random
 from bs4 import BeautifulSoup 
 from urllib.parse import urljoin 
 import re
+import zipfile, io
 
 # Get links from website
 def get_links(url): 
@@ -34,7 +35,7 @@ def get_all_links(url):
 def choose_zip(all_links):
     zip_links = []
     for link in all_links:
-        if re.search("\.zip", link):
+        if re.search("\.zip", link) and not re.search("2023", link) and not re.search("2024", link):
             zip_links.append(link)
     return zip_links
         
@@ -42,15 +43,9 @@ def choose_zip(all_links):
 # load all chosen files
 def load_files(zip_links):
     for link in zip_links:
-        res = [i for i in range(len(link)) if link.startswith('/', i)]
-        division = max(res)
-        folder = link[0:division+1]
-        file = link[division+1:]
-
-        url = (
-            folder
-        )
-        urlretrieve(url, file)
+        r = requests.get(link)
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+        z.extractall()
 
 
 all_links = get_all_links("https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/opad/")
