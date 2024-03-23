@@ -1,3 +1,3 @@
 *.csv
 *.gz
-*/__pychache__
+*.pyc

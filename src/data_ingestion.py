@@ -56,10 +56,10 @@ def transform_localization(folder_path):
 
 def create_path_to_data():
     current_path = os.getcwd()
-    current_path = current_path + '\dane'
+    current_path = current_path + '\data'
     return current_path
 
-def main():
+def prepare_data():
     data_path = create_path_to_data()
     data = read_data(data_path)
     data.to_csv(f'{data_path}/full_data.csv.gz', compression='gzip')
@@ -68,5 +68,5 @@ def main():
     
 
 if __name__ == "__main__":
-    main()
+    prepare_data()
     
