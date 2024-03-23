@@ -56,7 +56,7 @@ def transform_localization(folder_path):
 
 def create_path_to_data():
     current_path = os.getcwd()
-    current_path = current_path + '\dane'
+    current_path = current_path + '\data'
     return current_path
 
 def prepare_data():
