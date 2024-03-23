@@ -61,11 +61,14 @@ def create_path_to_data():
 
 def prepare_data():
     data_path = create_path_to_data()
+    print("Reading data")
     data = read_data(data_path)
     data.to_csv(f'{data_path}/full_data.csv.gz', compression='gzip')
+    print("Full data saved")
+    print("Reading localization data")
     localization = transform_localization(data_path)
     localization.to_csv(f'{data_path}/localization_data.csv.gz', compression='gzip')
-    
+    print("Localization data saved")
 
 if __name__ == "__main__":
     prepare_data()

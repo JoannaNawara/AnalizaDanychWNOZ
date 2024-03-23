@@ -60,4 +60,5 @@ def download_data(url):
     load_files(zip_links)
     print('csv files loaded to data folder')
 
-download_data("https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/opad/")
+if __name__ == "__main__":
+    download_data("https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/opad/")
