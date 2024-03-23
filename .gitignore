@@ -1,3 +1,3 @@
 *.csv
 *.gz
-*/_pychache_
+__pychache__
