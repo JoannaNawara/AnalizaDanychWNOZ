@@ -22,11 +22,11 @@ def draw_map(mapa, points):
     ax.set_title("Metrological stations' locations")
     plt.show()
 
-def main():
+def all_stations_map():
     data_path = create_path_to_data()
     points = read_data_points(data_path)
     mapa = read_data_map(data_path)
     draw_map(mapa, points)
 
 if __name__ == "__main__":
-    main()
+    all_stations_map()
