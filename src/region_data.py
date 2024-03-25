@@ -1,7 +1,5 @@
-#from src.data_ingestion import create_path_to_data
-#from src.plot_map import read_data_points, read_data_map
-from data_ingestion import create_path_to_data
-from reading_data import read_map_data, read_localization_data, read_meteo_data
+from src.plot_map import read_map_data, read_localization_data, read_meteo_data
+#from reading_data import read_map_data, read_localization_data, read_meteo_data
 
 def choose_region(region):
     points = read_localization_data()
