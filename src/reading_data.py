@@ -1,8 +1,8 @@
 import pandas as pd
 import geopandas as gpd
 #comment to run just this file
-from src.data_ingestion import create_path_to_data
-#from data_ingestion import create_path_to_data
+#from .data_ingestion import create_path_to_data
+from data_ingestion import create_path_to_data
 
 def read_localization_data():
     data_path = create_path_to_data()
