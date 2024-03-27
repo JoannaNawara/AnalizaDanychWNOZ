@@ -1,7 +1,7 @@
-#from .region_data import choose_region
-#from .region_map import region_stations_map
-from region_data import choose_region
-from region_map import region_stations_map
+from .region_data import choose_region
+from .region_map import region_stations_map
+#from region_data import choose_region
+#from region_map import region_stations_map
 
 def check_stations_unique(region):
     mapa, data = choose_region(region)

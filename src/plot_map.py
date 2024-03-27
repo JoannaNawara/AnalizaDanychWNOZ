@@ -1,5 +1,5 @@
-#from .reading_data import read_map_data, read_localization_data 
-from reading_data import read_map_data, read_localization_data
+from .reading_data import read_map_data, read_localization_data 
+#from reading_data import read_map_data, read_localization_data
 import matplotlib.pyplot as plt 
 
 def draw_map(mapa, points, region):

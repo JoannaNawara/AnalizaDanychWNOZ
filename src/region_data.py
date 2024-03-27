@@ -1,5 +1,5 @@
-#from .reading_data import read_map_data, read_localization_data, read_meteo_data
-from reading_data import read_map_data, read_localization_data, read_meteo_data
+from .reading_data import read_map_data, read_localization_data, read_meteo_data
+#from reading_data import read_map_data, read_localization_data, read_meteo_data
 
 def choose_region(region):
     points = read_localization_data()
