@@ -1,7 +1,7 @@
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt 
-from data_ingestion import create_path_to_data
+from .data_ingestion import create_path_to_data
 
 def read_data_points(folder_path):
     data = pd.read_csv(f'{folder_path}/localization_data.csv.gz', compression='gzip')
