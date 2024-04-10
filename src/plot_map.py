@@ -5,8 +5,10 @@ import os
 
 def create_path_to_visualizations():
     current_path = os.getcwd()
-    current_path = current_path + '\\visualizations'
-    return current_path
+    vis_path = current_path + '\\visualizations'
+    if not os.path.exists(vis_path):
+        os.makedirs(vis_path)
+    return vis_path
 
 def draw_map(mapa, points, region):
     path = create_path_to_visualizations()
