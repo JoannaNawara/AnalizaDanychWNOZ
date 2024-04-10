@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 from .region_data import get_region_meteo_data
 from .region_map import region_stations_analysis_map, timeline
 from .data_ingestion import create_path_to_data
@@ -48,9 +49,11 @@ def analysis_2(region):
     timeline(data, "all stations")
     print(f"\n4. As there is a lot of data missing, we will choose the stations with the best timelines:")
     good_data = choose_good_stations(data, time_span)
-    print(f"\nSaving the data from {len(good_data['Nazwa'].unique())} chosen stations to a new file")
+    print(f"\nSaving the data from {len(good_data['Nazwa'].unique())} chosen stations")
     data_path = create_path_to_data()
-    good_data.to_csv(f'{data_path}/chosen_stations_data.csv.gz', compression='gzip', index=False)
+    if not os.path.isfile(f'{data_path}/{region}_data.csv.gz'):
+        good_data.to_csv(f'{data_path}/{region}_data.csv.gz', compression='gzip', index=False)
+    print(f"\nData saved in '{region}_data.csv.gz' file")
 
 if __name__ == "__main__":
     analysis_2("dolnośląskie")

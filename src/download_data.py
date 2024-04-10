@@ -5,6 +5,7 @@ from urllib.parse import urljoin
 import re
 import zipfile, io
 import os
+from .data_ingestion import create_path_to_data
 
 repo_path = os.getcwd()
 
@@ -41,12 +42,20 @@ def choose_zip(all_links):
         if re.search("\.zip", link) and not re.search("2023", link) and not re.search("2024", link):
             zip_links.append(link)
     return zip_links
-        
 
 # load all chosen files
 def load_files(zip_links):
     destination = repo_path + '\data'
+    data_path = create_path_to_data()
     for link in zip_links:
+        year_l = int(link.split("/")[-1].split("_")[0])
+        if year_l <= 2000:
+            file = f"o_d_{year_l}.csv"
+        else:
+            month = link.split("/")[-1].split("_")[1]
+            file = f"o_d_{month}_{year_l}.csv"
+        if os.path.isfile(data_path+"/"+file):
+            continue
         r = requests.get(link)
         z = zipfile.ZipFile(io.BytesIO(r.content))
         z.extractall(destination)
