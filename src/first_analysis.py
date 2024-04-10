@@ -14,13 +14,13 @@ def check_stations_unique(region):
         print("There are duplicate stations in this region")
 
 def analysis_1(region):
-    print("First analysis:\n")
+    print("\nFirst analysis:\n")
     print(f"1. Stations list for region {region}:")
     mapa, stations = choose_region(region)
     print(stations.to_string())
     print("\n2. Checking if stations are unique in this region")
     check_stations_unique(region)
-    print("\n3. Map with station locations in new window")
+    print(f"\n3. Map with {len(stations)} station locations saved in file 'Station_locations_{region}.png'")
     region_stations_map(region)
 
 if __name__ == "__main__":

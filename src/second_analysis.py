@@ -24,17 +24,17 @@ def data_time_span(data):
     time_span.reset_index(inplace=True)
     return time_span
 
-def choose_good_stations(data, time_span):
+def choose_good_stations(data, time_span, region):
     data_30 = data[data["Nazwa"].isin(list(time_span[time_span["len"]>30]["Nazwa"]))]
-    print(f"\na) Timeline of stations with more than 30 years of data in new window")
-    timeline(data_30, "stations with more than 30 years of data")
+    print(f"\na) Timeline of {len(data_30['Nazwa'].unique())} stations with more than 30 years of data saved in file 'Timeline_{region}_more_than_30_years_of_data.png'")
+    timeline(data_30, "more than 30 years of data", region)
     data_new = data_30[data_30["Nazwa"].isin([row["Nazwa"] for i, row in time_span.iterrows() if sorted(row["Rok"])[-1] == 2022])]
-    print(f"\nb) Timeline of stations with data from the last years in new window")
-    timeline(data_new, "stations with data from the last year")
+    print(f"\nb) Timeline of {len(data_new['Nazwa'].unique())} stations with data from the last years saved in file 'Timeline_{region}_with_data_from_last_year.png'")
+    timeline(data_new, "with data from last year", region)
     diff = [min([sorted(row["Rok"])[j]-sorted(row["Rok"])[j+1] for j in range(len(row["Rok"])-1)], default=-1) for i, row in time_span.iterrows()]
     data_const = data_new[data_new["Nazwa"].isin([row["Nazwa"] for i, row in time_span.iterrows() if diff[i] >= -1])]
-    print(f"\nc) Timeline of stations with continuous data")
-    timeline(data_const, "stations with continuous data")
+    print(f"\nc) Timeline of {len(data_const['Nazwa'].unique())} stations with continuous data on yearly granularity saved in file 'Timeline_{region}_continuous_data.png'")
+    timeline(data_const, "continuous data", region)
     return data_const
 
 def analysis_2(region):
@@ -43,12 +43,12 @@ def analysis_2(region):
     print(f"\n1. Checking how mamy stations don't have any data for {region}:")
     data, empty = check_empty_stations(data)
     time_span = data_time_span(data)
-    print(f"\n2. Map with station locations and number of years of data in new window")
+    print(f"\n2. Map with station locations and number of years of data saved in file 'Station_locations_{region}_years_n.png'")
     region_stations_analysis_map(region, time_span, empty)
-    print(f"\n3. Timeline of station data in new window")
-    timeline(data, "all stations")
+    print(f"\n3. Timeline of station data saved in file 'Timeline_{region}_all.png'")
+    timeline(data, "all", region)
     print(f"\n4. As there is a lot of data missing, we will choose the stations with the best timelines:")
-    good_data = choose_good_stations(data, time_span)
+    good_data = choose_good_stations(data, time_span, region)
     print(f"\nSaving the data from {len(good_data['Nazwa'].unique())} chosen stations")
     data_path = create_path_to_data()
     if not os.path.isfile(f'{data_path}/{region}_data.csv.gz'):
