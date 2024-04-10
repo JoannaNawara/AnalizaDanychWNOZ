@@ -13,4 +13,3 @@ dependencies:
   - bs4=4.12
 platforms:
   - win-64
-

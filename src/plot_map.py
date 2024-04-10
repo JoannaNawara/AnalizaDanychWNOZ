@@ -1,32 +1,28 @@
-import pandas as pd
-import geopandas as gpd
+from .reading_data import read_map_data, read_localization_data 
+#from reading_data import read_map_data, read_localization_data
 import matplotlib.pyplot as plt 
-from .data_ingestion import create_path_to_data
+import os
 
-def read_data_points(folder_path):
-    data = pd.read_csv(f'{folder_path}/localization_data.csv.gz', compression='gzip')
-    points = gpd.GeoDataFrame({"geometry":gpd.points_from_xy(x=data["Długość geograficzna"], y=data["Szerokość geograficzna"])})
-    points = points.set_crs(epsg=9702)
-    points = points.drop(points[points["geometry"].x == points["geometry"].y].index)
-    return points
+def create_path_to_visualizations():
+    current_path = os.getcwd()
+    vis_path = current_path + '\\visualizations'
+    if not os.path.exists(vis_path):
+        os.makedirs(vis_path)
+    return vis_path
 
-def read_data_map(folder_path):
-    mapa = gpd.read_file(f"{folder_path}/Wojewodztwa.zip")
-    mapa = gpd.GeoDataFrame(mapa, geometry="geometry")
-    return mapa
-
-def draw_map(mapa, points):
-    fig, ax = plt.subplots(1, 1, figsize=(10, 30))
+def draw_map(mapa, points, region):
+    path = create_path_to_visualizations()
+    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
     mapa.plot(ax=ax, color="green")
     points.plot(ax=ax, markersize=2, color="yellow")
-    ax.set_title("Metrological stations' locations")
-    plt.show()
+    ax.set_title(f"Metrological station locations for {region}")
+    plt.savefig(f"{path}/Station_locations_{region}.png")
 
 def all_stations_map():
-    data_path = create_path_to_data()
-    points = read_data_points(data_path)
-    mapa = read_data_map(data_path)
-    draw_map(mapa, points)
+    points = read_localization_data()
+    mapa = read_map_data()
+    draw_map(mapa, points, "Poland")
+    print(f"\nMap with station locations saved in file 'Station_locations_Poland.png'")
 
 if __name__ == "__main__":
     all_stations_map()

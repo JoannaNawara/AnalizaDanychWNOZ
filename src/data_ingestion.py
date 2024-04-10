@@ -1,5 +1,4 @@
 import pandas as pd
-import re
 import os
 
 def read_data(folder_path):
@@ -53,7 +52,6 @@ def transform_localization(folder_path):
     localization['Długość geograficzna'] = [ int(element[0]) + int(element[1])/60 + int(element[2])/3600 for element in localization['Długość geograficzna'].str.split()]
     return localization
 
-
 def create_path_to_data():
     current_path = os.getcwd()
     current_path = current_path + '\data'
@@ -62,12 +60,14 @@ def create_path_to_data():
 def prepare_data():
     data_path = create_path_to_data()
     print("Reading data")
-    data = read_data(data_path)
-    data.to_csv(f'{data_path}/full_data.csv.gz', compression='gzip')
+    if not os.path.isfile(f'{data_path}/full_data.csv.gz'):
+        data = read_data(data_path)
+        data.to_csv(f'{data_path}/full_data.csv.gz', compression='gzip', index=False)
     print("Full data saved")
     print("Reading localization data")
-    localization = transform_localization(data_path)
-    localization.to_csv(f'{data_path}/localization_data.csv.gz', compression='gzip')
+    if not os.path.isfile(f'{data_path}/localization_data.csv.gz'):
+        localization = transform_localization(data_path)
+        localization.to_csv(f'{data_path}/localization_data.csv.gz', compression='gzip', index=False)
     print("Localization data saved")
 
 if __name__ == "__main__":
