@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from .data_ingestion import create_path_to_data
-
+from .plot_map import create_path_to_visualizations
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -158,13 +158,14 @@ def filter_by_number_of_nulls_in_row(data, stations_start_end, threshold=30):
 
     return data_filtered
 
-def plot_nulls_percent(data, stations_start_end):
+def plot_nulls_percent(data, stations_start_end, region):
     data['is_null'] = data['Suma dobowa opadów [mm]'].isnull()
     for station in data['ID'].unique():
         station_data = data[data['ID'] == station]
         station_data = data[(pd.to_datetime(data['Data']) > pd.to_datetime(stations_start_end.loc[station]['Start_date'])) & (pd.to_datetime(data['Data']) < pd.to_datetime(stations_start_end.loc[station]['End_date']))]
         stations_start_end.loc[station,'Null%'] = station_data['is_null'].sum()/len(station_data)
 
+    path = create_path_to_visualizations()
     plt.figure(figsize=(10, 6))
     sns.scatterplot(x='ID', y='Null%', data=stations_start_end, color='seagreen')
     plt.xlabel('ID')
@@ -172,7 +173,7 @@ def plot_nulls_percent(data, stations_start_end):
     plt.title('Null Percentage for Each ID')
     plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
     plt.grid(True)
-    plt.show()
+    plt.savefig(f"{path}/Null_percantage_station_{region}.png")
 
 def eda(region):
     print("\nExploratory Data Analysis:\n")
@@ -189,7 +190,7 @@ def eda(region):
 
 
     stations_start_end = get_stations_start_end(data_original)
-    plot_nulls_percent(data, stations_start_end)
+    plot_nulls_percent(data, stations_start_end, region)
 
     data_filtered = filter_by_number_of_nulls_in_row(data, stations_start_end, threshold=30)
     data_filtered = interpolate_values(data_filtered)
