@@ -1,4 +1,7 @@
 *.csv
 *.gz
 *.pyc
+*.png
 loaded_files.txt
+*.ipynb
+
