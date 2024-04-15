@@ -177,8 +177,8 @@ def plot_nulls_percent(data, stations_start_end, region):
     plt.savefig(f"{path}/Null_percantage_station_{region}.png")
 
 def get_description(data):
-    data[["Suma dobowa opadów [mm]", "Status pomiaru SMDB", "Wysokość pokrywy śnieżnej [cm]", 
-    "Status pomiaru PKSN", "Wysokość świeżospadłego śniegu [cm]", "Status pomiaru HSS", "Status pomiaru GATS", "Status pomiaru RPSN"]].describe()
+    print(data[["Suma dobowa opadów [mm]", "Status pomiaru SMDB", "Wysokość pokrywy śnieżnej [cm]", 
+    "Status pomiaru PKSN", "Wysokość świeżospadłego śniegu [cm]", "Status pomiaru HSS", "Status pomiaru GATS", "Status pomiaru RPSN"]].describe())
 
 def eda(region):
     print("\nExploratory Data Analysis:\n")
@@ -200,8 +200,6 @@ def eda(region):
     data_filtered = filter_by_number_of_nulls_in_row(data, stations_start_end, threshold=30)
     data_filtered = interpolate_values(data_filtered)
     data_filtered = correct_interpolate(data_filtered, stations_start_end)
-
-    get_description(data_filtered)
 
     if not os.path.isfile(f'{data_path}/{region}_data_cleaned.csv.gz'):
         data_filtered.to_csv(f'{data_path}/{region}_data_cleaned.csv.gz', compression='gzip', index=False)
