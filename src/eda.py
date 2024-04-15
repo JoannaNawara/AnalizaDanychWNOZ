@@ -180,6 +180,23 @@ def get_description(data):
     print(data[["Suma dobowa opadów [mm]", "Status pomiaru SMDB", "Wysokość pokrywy śnieżnej [cm]", 
     "Status pomiaru PKSN", "Wysokość świeżospadłego śniegu [cm]", "Status pomiaru HSS", "Status pomiaru GATS", "Status pomiaru RPSN"]].describe())
 
+def plot_histogram_distribution(data, region):
+    path = create_path_to_visualizations()
+    ids = data["ID"].unique()
+    fig, ax = plt.subplots(5, 4, figsize=(20, 20))
+    id = 0
+    for i in range(5):
+        for j in range(4):
+            if id == len(ids):
+                break
+            sns.histplot(data=data[data.ID == ids[id]], x=f"Suma dobowa opadów [mm]", ax=ax[i][j], color='seagreen')
+            ax[i][j].set_title(f"ID: {ids[id]}")
+            ax[i][j].set_ylabel("Liczba wystąpień")  
+            id += 1
+
+    fig.tight_layout()
+    plt.savefig(f"{path}/distribution_precipitation_{region}.png")
+
 def eda(region):
     print("\nExploratory Data Analysis:\n")
     data_path = create_path_to_data()
