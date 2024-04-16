@@ -206,6 +206,7 @@ def snowfall_by_month(data, region):
     fig.tight_layout()
     fig.subplots_adjust(top=0.95)
     plt.savefig(f"{path}/Snowfall_by_month_{region}.png")
+    print(f"\nPlot saved as Snowfall_by_month_{region}.png in visualizations folder.")
 
 def precipitation_by_month(data, region):
     path = create_path_to_visualizations()
@@ -225,6 +226,7 @@ def precipitation_by_month(data, region):
     fig.tight_layout()
     fig.subplots_adjust(top=0.95)
     plt.savefig(f"{path}/Precipitation_by_month_{region}.png")
+    print(f"\nPlot saved as Precipitation_by_month_{region}.png in visualizations folder.")
 
 def plot_histogram_distribution(data, region):
     path = create_path_to_visualizations()
@@ -244,6 +246,7 @@ def plot_histogram_distribution(data, region):
     fig.tight_layout()
     fig.subplots_adjust(top=0.95)
     plt.savefig(f"{path}/distribution_precipitation_{region}.png")
+    print(f"\nPlot saved as distribution_precipitation_{region}.png in visualizations folder.")
 
 def precipitation_through_time(data, region):
     path = create_path_to_visualizations()
@@ -264,13 +267,14 @@ def precipitation_through_time(data, region):
     fig.tight_layout()
     fig.subplots_adjust(top=0.95)
     plt.savefig(f"{path}/precipitation_{region}.png")
+    print(f"\nPlot saved as precipitation_{region}.png in visualizations folder.")
 
 def eda(region):
     print("\nExploratory Data Analysis:\n")
     data_path = create_path_to_data()
-    print("Reading data...")
+    print("\nReading data...")
     data_original = pd.read_csv(f'{data_path}/{region}_data.csv.gz', compression='gzip')
-    print("Data loaded\n")
+    print("\nData loaded\n")
 
     check_null_values(data_original)
     
@@ -282,21 +286,36 @@ def eda(region):
 
     
     stations_start_end = get_stations_start_end(data_original)
-    print("Preparing plot for null values percentage...\n")
+    print("\nPreparing plot for null values percentage...")
     plot_nulls_percent(data, stations_start_end, region)
-    print("You can find plot in visualizations folder.\n")
+    print("\nYou can find plot in visualizations folder.")
 
-    print("Filtering data...\n")
+    print("\nFiltering data...\n")
     data_filtered = filter_by_number_of_nulls_in_row(data, stations_start_end, threshold=30)
-    print("Data filtered.\n")
+    print("\nData filtered.\n")
 
-    print("Interpolating values...\n")
+    print("\nInterpolating values...\n")
     data_filtered = interpolate_values(data_filtered)
     data_filtered = correct_interpolate(data_filtered, stations_start_end)
-    print("Data is transformed and cleaned")
+    print("\nData is transformed and cleaned")
 
     if not os.path.isfile(f'{data_path}/{region}_data_cleaned.csv.gz'):
         data_filtered.to_csv(f'{data_path}/{region}_data_cleaned.csv.gz', compression='gzip', index=False)
     print(f"\nData saved in '{region}_data.csv.gz' file")
+
+    print("\nData basic statistics:\n")
+
+    get_description(data_filtered)
+
+    print("\nPlotting data...\n")
+
+    precipitation_through_time(data_filtered, region)
+    precipitation_by_month(data_filtered, region)
+    plot_histogram_distribution(data_filtered, region)
+    snowfall_by_month(data_filtered, region)
+
+    print("\nEDA is finished.\n")
+    
+    
 
 
