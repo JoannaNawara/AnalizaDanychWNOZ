@@ -16,7 +16,7 @@ def main():
     analysis_1("dolnośląskie")
     #Second analysis of data for chosen region
     analysis_2("dolnośląskie")
-
+    # Peparing data for analysis
     eda("dolnośląskie")
 
 if __name__ == "__main__":
