@@ -4,6 +4,7 @@ from src.download_data import download_data
 from src.eda import eda
 from src.first_analysis import analysis_1
 from src.second_analysis import analysis_2
+from src.SPI import get_SPI
 
 def main():
     #Downloading data
@@ -18,6 +19,8 @@ def main():
     analysis_2("dolnośląskie")
 
     eda("dolnośląskie")
+    #Counting SPI values for n defined in the list
+    get_SPI("dolnośląskie", [1,3,12])
 
 if __name__ == "__main__":
     main()
