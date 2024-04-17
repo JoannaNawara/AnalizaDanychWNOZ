@@ -1,4 +1,4 @@
-from data_ingestion import create_path_to_data
+from .data_ingestion import create_path_to_data
 import pandas as pd
 from scipy.stats import gamma, norm
 import os
