@@ -17,7 +17,7 @@ def main():
     analysis_1("dolnośląskie")
     #Second analysis of data for chosen region
     analysis_2("dolnośląskie")
-
+    # Peparing data for analysis
     eda("dolnośląskie")
     #Counting SPI values for n defined in the list
     get_SPI("dolnośląskie", [1,3,12])
