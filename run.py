@@ -1,6 +1,7 @@
 from src.data_ingestion import prepare_data
 from src.plot_map import all_stations_map
 from src.download_data import download_data
+from src.eda import eda
 from src.first_analysis import analysis_1
 from src.second_analysis import analysis_2
 
@@ -15,6 +16,8 @@ def main():
     analysis_1("dolnośląskie")
     #Second analysis of data for chosen region
     analysis_2("dolnośląskie")
+    # Peparing data for analysis
+    eda("dolnośląskie")
 
 if __name__ == "__main__":
     main()
