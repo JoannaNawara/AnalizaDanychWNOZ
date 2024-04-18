@@ -1,4 +1,4 @@
-from data_ingestion import create_path_to_data
+from .data_ingestion import create_path_to_data
 import pandas as pd
 from scipy.stats import gamma, norm
 import os
@@ -27,7 +27,7 @@ def get_SPI(region, list_n):
             SPI_df = pd.concat([SPI_df, df])
         if not os.path.isfile(f'{data_path}/{region}_SPI{i}_data_cleaned.csv.gz'):
             SPI_df.to_csv(f'{data_path}/{region}_SPI{i}_data_cleaned.csv.gz', compression='gzip', index=False)
-            print(f"\nData saved in '{region}_SPI{i}_data_cleaned.csv.gz' file")
+        print(f"\nData saved in '{region}_SPI{i}_data_cleaned.csv.gz' file")
 
 if __name__ == "__main__":
     get_SPI("dolnośląskie", [1,3,12])

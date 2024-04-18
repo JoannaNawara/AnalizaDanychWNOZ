@@ -70,7 +70,7 @@ def create_day(row):
     return row['Data'].day
 
 def add_date_column(data):
-    data['Data'] = data.apply(create_datetime, axis=1)
+    data = data.assign(Data=data.apply(create_datetime, axis=1).values)
     data['Data'] = pd.to_datetime(data['Data'], format='%Y-%m-%d')
     return data
 
@@ -89,7 +89,7 @@ def add_missing_rows(data):
     full_data_pattern = create_full_data_pattern(data_locations, date_range)
     data = add_date_column(data)
     missing_data = get_missing_data(full_data_pattern, data)
-    filled_data =  pd.concat([data, missing_data], axis=0, keys=list(data.columns))
+    filled_data =  pd.concat([data, missing_data], axis=0)
     return filled_data
 
 def fill_null_values(data):
@@ -170,7 +170,7 @@ def plot_nulls_percent(data, stations_start_end, region):
         stations_start_end.loc[station,'Null%'] = station_data['is_null'].sum()/len(station_data)
 
     path = create_path_to_visualizations()
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 10))
     sns.scatterplot(x='ID', y='Null%', data=stations_start_end, color='seagreen')
     plt.xlabel('ID')
     plt.ylabel('Null Percentage')
@@ -188,7 +188,7 @@ def eda(region):
     print("\nExploratory Data Analysis:\n")
     data_path = create_path_to_data()
     print("Reading data...")
-    data_original = pd.read_csv(f'{data_path}/{region}_data.csv.gz', compression='gzip')
+    data_original = pd.read_csv(f'{data_path}/{region}_data.csv.gz', compression='gzip', low_memory=False)
     print("Data loaded\n")
 
     check_null_values(data_original)
@@ -201,7 +201,7 @@ def eda(region):
     data = fill_null_values(data)
     
     stations_start_end = get_stations_start_end(data_original)
-    print("Preparing plot for null values percentage...\n")
+    print("\nPreparing plot for null values percentage...")
     plot_nulls_percent(data, stations_start_end, region)
 
     print("Filtering data...\n")
