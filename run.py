@@ -5,6 +5,7 @@ from src.eda import eda
 from src.first_analysis import analysis_1
 from src.second_analysis import analysis_2
 from src.SPI import get_SPI
+from src.visualize_spi import describe_region_spi
 
 def main():
     #Downloading data
@@ -21,6 +22,8 @@ def main():
     eda("dolnośląskie")
     #Counting SPI values for n defined in the list
     get_SPI("dolnośląskie", [1,3,12])
+    #Visualizing SPI for the entire region
+    describe_region_spi('dolnośląskie')
 
 if __name__ == "__main__":
     main()
