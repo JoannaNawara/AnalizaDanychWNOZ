@@ -278,7 +278,7 @@ def eda(region):
     print("\nExploratory Data Analysis:\n")
     data_path = create_path_to_data()
     print("\nReading data...")
-    data_original = pd.read_csv(f'{data_path}/{region}_data.csv.gz', compression='gzip')
+    data_original = pd.read_csv(f'{data_path}/{region}_data.csv.gz', compression='gzip', low_memory=False)
     print("\nData loaded\n")
 
     check_null_values(data_original)

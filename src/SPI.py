@@ -13,6 +13,7 @@ def SPIn(data, n):
     return norm.ppf(gamma_cdf), ind
 
 def get_SPI(region, list_n):
+    print("\nCounting SPI values")
     data_path = create_path_to_data()
     clean_data = pd.read_csv(f'{data_path}/{region}_data_cleaned.csv.gz', compression='gzip')
     stations = clean_data[["ID", "Nazwa", "geometry"]].drop_duplicates()
