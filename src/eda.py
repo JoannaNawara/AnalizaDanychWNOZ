@@ -294,13 +294,12 @@ def eda(region):
     print("\nPreparing plot for null values percentage...")
 
     plot_nulls_percent(data, stations_start_end, region)
-    print("\nYou can find plot in visualizations folder.")
 
     print("\nFiltering data...\n")
     data_filtered = filter_by_number_of_nulls_in_row(data, stations_start_end, threshold=30)
-    print("\nData filtered.\n")
+    print("\nData filtered.")
 
-    print("\nInterpolating values...\n")
+    print("\nInterpolating values...")
     data_filtered = interpolate_values(data_filtered)
     data_filtered = correct_interpolate(data_filtered, stations_start_end)
     print("\nData is transformed and cleaned")
@@ -313,7 +312,7 @@ def eda(region):
 
     get_description(data_filtered)
 
-    print("\nPlotting data...\n")
+    print("\nPlotting data...")
 
     precipitation_through_time(data_filtered, region)
     precipitation_by_month(data_filtered, region)
