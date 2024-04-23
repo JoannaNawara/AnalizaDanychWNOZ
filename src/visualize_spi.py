@@ -3,6 +3,7 @@ from .data_ingestion import create_path_to_data
 from .plot_map import create_path_to_visualizations
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.dates as mdates
 
 def load_spi_data(region, i):
     data_path = create_path_to_data()
@@ -15,6 +16,7 @@ def load_spi_data(region, i):
     # filter the data
     data = data[data['Data'] >= first_date]
     data = data[data['Data'] <= last_date]
+    print(f"Analizowane będą dane SPI od {first_date} do {last_date}")
     return data
 
 def plot_SPI_hists(data, region, i):
@@ -83,9 +85,9 @@ def all_line(data, region, i):
     data_min = data.groupby("Data")["SPI"].min()
     data_max = data.groupby("Data")["SPI"].max()
     fig, ax = plt.subplots(1, 1, figsize=(15, 10))
-    ax.plot(data_min.index, data_min.values, color="cornflowerblue", label="Min")
-    ax.plot(data_max.index, data_max.values, color="limegreen", label="Max")
-    ax.plot(data_mean.index, data_mean.values, color="orange", label="Mean")
+    ax.plot(pd.to_datetime(data_min.index), data_min.values, color="cornflowerblue", label="Min")
+    ax.plot(pd.to_datetime(data_min.index), data_max.values, color="limegreen", label="Max")
+    ax.plot(pd.to_datetime(data_min.index), data_mean.values, color="orange", label="Mean")
     ax.set_title(f"Lineplots of all SPI{i} values")
     ax.set(ylabel="SPI", xlabel="Data")
     plt.legend()
