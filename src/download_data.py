@@ -69,5 +69,12 @@ def download_data(url):
     load_files(zip_links)
     print('csv files loaded to data folder')
 
+def download_codes(link):
+    r = requests.get(link).content
+    path = create_path_to_data() + '\kody_stacji.csv'
+    csv_file = open(path, 'wb')
+    csv_file.write(r)
+    csv_file.close()
+
 if __name__ == "__main__":
     download_data("https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/opad/")
