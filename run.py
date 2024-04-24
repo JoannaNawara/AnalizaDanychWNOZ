@@ -1,6 +1,6 @@
 from src.data_ingestion import prepare_data
 from src.plot_map import all_stations_map
-from src.download_data import download_data
+from src.download_data import download_data, download_codes
 from src.eda import eda
 from src.first_analysis import analysis_1
 from src.second_analysis import analysis_2
@@ -10,6 +10,7 @@ from src.visualize_spi import describe_region_spi
 def main():
     #Downloading data
     download_data("https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/opad/")
+    download_codes("https://danepubliczne.imgw.pl/pl/datastore/getfiledown/Arch/Telemetria/Meteo/kody_stacji.csv")
     #Data ingestion
     prepare_data()
     #Map of all station locations
