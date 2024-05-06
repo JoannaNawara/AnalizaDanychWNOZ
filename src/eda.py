@@ -5,6 +5,7 @@ from .plot_map import create_path_to_visualizations
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+from matplotlib.lines import Line2D
 
 def check_null_values(data):
     print('Amount of null values in each column:')
@@ -70,7 +71,7 @@ def create_day(row):
     return row['Data'].day
 
 def add_date_column(data):
-    data['Data'] = data.apply(create_datetime, axis=1)
+    data = data.assign(Data=data.apply(create_datetime, axis=1).values)
     data['Data'] = pd.to_datetime(data['Data'], format='%Y-%m-%d')
     return data
 
@@ -89,7 +90,7 @@ def add_missing_rows(data):
     full_data_pattern = create_full_data_pattern(data_locations, date_range)
     data = add_date_column(data)
     missing_data = get_missing_data(full_data_pattern, data)
-    filled_data =  pd.concat([data, missing_data], axis=0, keys=list(data.columns))
+    filled_data =  pd.concat([data, missing_data], axis=0)
     return filled_data
 
 def fill_null_values(data):
@@ -170,7 +171,7 @@ def plot_nulls_percent(data, stations_start_end, region):
         stations_start_end.loc[station,'Null%'] = station_data['is_null'].sum()/len(station_data)
 
     path = create_path_to_visualizations()
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 10))
     sns.scatterplot(x='ID', y='Null%', data=stations_start_end, color='seagreen')
     plt.xlabel('ID')
     plt.ylabel('Null Percentage')
@@ -184,12 +185,101 @@ def get_description(data):
     print(data[["Suma dobowa opadów [mm]", "Status pomiaru SMDB", "Wysokość pokrywy śnieżnej [cm]", 
     "Status pomiaru PKSN", "Wysokość świeżospadłego śniegu [cm]", "Status pomiaru HSS", "Status pomiaru GATS", "Status pomiaru RPSN"]].describe())
 
+def snowfall_by_month(data, region):
+    path = create_path_to_visualizations()
+    ids = data["ID"].unique()
+    fig, ax = plt.subplots(5, 4, figsize=(20, 20))
+    id = 0
+    for i in range(5):
+        for j in range(4):
+            if id == len(ids):
+                break
+            to_plot = data[data.ID == ids[id]]
+            sns.lineplot(data = to_plot, x='Miesiąc', y='Wysokość świeżospadłego śniegu [cm]', ax=ax[i][j], color='lightblue')
+            sns.lineplot(data = to_plot, x='Miesiąc', y='Wysokość pokrywy śnieżnej [cm]', ax=ax[i][j], color='blue')
+            ax[i][j].set_title(f"ID: {ids[id]}") 
+            ax[i][j].set_ylabel("Wysokość pokrywy śnieżnej/opadów śniegu [cm]") 
+            id += 1
+
+    line_snow = Line2D([0], [0], color='lightblue', lw=2)
+    line_snow_cover = Line2D([0], [0], color='blue', lw=2)
+    lines = [line_snow, line_snow_cover]
+
+    # Tworzenie legendy dla całej figury
+    fig.legend(lines, ['Świeżospadły śnieg', 'Pokrywa śnieżna'], loc='upper right')
+    fig.suptitle("Wysokość pokrywy śnieżnej oraz świeżospadłego śniegu", fontsize=17)
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.95)
+    plt.savefig(f"{path}/Snowfall_by_month_{region}.png")
+    print(f"\nPlot saved as Snowfall_by_month_{region}.png in visualizations folder.")
+
+def precipitation_by_month(data, region):
+    path = create_path_to_visualizations()
+    ids = data["ID"].unique()
+    fig, ax = plt.subplots(5, 4, figsize=(20, 20))
+    id = 0
+    for i in range(5):
+        for j in range(4):
+            if id == len(ids):
+                break
+            to_plot = data[data.ID == ids[id]]
+            sns.lineplot(data = to_plot, x='Miesiąc', y='Suma dobowa opadów [mm]', ax=ax[i][j], color='seagreen')
+            ax[i][j].set_title(f"ID: {ids[id]}")
+            id += 1
+
+    fig.suptitle("Opady w zależności od miesiąca", fontsize=17)
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.95)
+    plt.savefig(f"{path}/Precipitation_by_month_{region}.png")
+    print(f"\nPlot saved as Precipitation_by_month_{region}.png in visualizations folder.")
+
+def plot_histogram_distribution(data, region):
+    path = create_path_to_visualizations()
+    ids = data["ID"].unique()
+    fig, ax = plt.subplots(5, 4, figsize=(20, 20))
+    id = 0
+    for i in range(5):
+        for j in range(4):
+            if id == len(ids):
+                break
+            sns.histplot(data=data[data.ID == ids[id]], x=f"Suma dobowa opadów [mm]", ax=ax[i][j], color='seagreen')
+            ax[i][j].set_title(f"ID: {ids[id]}")
+            ax[i][j].set_ylabel("Liczba wystąpień")  
+            id += 1
+
+    fig.suptitle("Rozkład wartości opadów", fontsize=17)
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.95)
+    plt.savefig(f"{path}/distribution_precipitation_{region}.png")
+    print(f"\nPlot saved as distribution_precipitation_{region}.png in visualizations folder.")
+
+def precipitation_through_time(data, region):
+    path = create_path_to_visualizations()
+    ids = data["ID"].unique()
+    fig, ax = plt.subplots(5, 4, figsize=(20, 20))
+    id = 0
+    for i in range(5):
+        for j in range(4):
+            if id == len(ids):
+                break
+            to_plot = data[data.ID == ids[id]]
+            to_plot.groupby(['Rok', 'Miesiąc'])['Suma dobowa opadów [mm]'].mean().plot(ax=ax[i][j], color='seagreen')
+            ax[i][j].set_title(f"ID: {ids[id]}")
+            ax[i][j].set_ylabel("Suma dobowa opadów [mm]")  
+            id += 1
+
+    fig.suptitle("Suma dobowa opadów przez lata", fontsize=17)
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.95)
+    plt.savefig(f"{path}/precipitation_{region}.png")
+    print(f"\nPlot saved as precipitation_{region}.png in visualizations folder.")
+
 def eda(region):
     print("\nExploratory Data Analysis:\n")
     data_path = create_path_to_data()
-    print("Reading data...")
-    data_original = pd.read_csv(f'{data_path}/{region}_data.csv.gz', compression='gzip')
-    print("Data loaded\n")
+    print("\nReading data...")
+    data_original = pd.read_csv(f'{data_path}/{region}_data.csv.gz', compression='gzip', low_memory=False)
+    print("\nData loaded\n")
 
     check_null_values(data_original)
     
@@ -201,20 +291,36 @@ def eda(region):
     data = fill_null_values(data)
     
     stations_start_end = get_stations_start_end(data_original)
-    print("Preparing plot for null values percentage...\n")
+    print("\nPreparing plot for null values percentage...")
+
     plot_nulls_percent(data, stations_start_end, region)
 
-    print("Filtering data...\n")
+    print("\nFiltering data...\n")
     data_filtered = filter_by_number_of_nulls_in_row(data, stations_start_end, threshold=30)
-    print("Data filtered.\n")
+    print("\nData filtered.")
 
-    print("Interpolating values...\n")
+    print("\nInterpolating values...")
     data_filtered = interpolate_values(data_filtered)
     data_filtered = correct_interpolate(data_filtered, stations_start_end)
-    print("Data is transformed and cleaned")
+    print("\nData is transformed and cleaned")
 
     if not os.path.isfile(f'{data_path}/{region}_data_cleaned.csv.gz'):
         data_filtered.to_csv(f'{data_path}/{region}_data_cleaned.csv.gz', compression='gzip', index=False)
     print(f"\nData saved in '{region}_data.csv.gz' file")
+
+    print("\nData basic statistics:\n")
+
+    get_description(data_filtered)
+
+    print("\nPlotting data...")
+
+    precipitation_through_time(data_filtered, region)
+    precipitation_by_month(data_filtered, region)
+    plot_histogram_distribution(data_filtered, region)
+    snowfall_by_month(data_filtered, region)
+
+    print("\nEDA is finished.\n")
+    
+    
 
 
